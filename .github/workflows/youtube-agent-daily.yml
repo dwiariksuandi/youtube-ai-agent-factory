@@ -1,0 +1,27 @@
+name: YouTube AI Agent Daily Factory
+on:
+  schedule:
+    - cron: '0 9 * * *'  # 16:00 WIB daily
+  workflow_dispatch:
+jobs:
+  factory:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Deploy
+      run: |
+        cd agentfactory
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+        python3 run_agent_factory.py
+      env:
+        PRIMARY_LLAMA3_API_KEY: ${{ secrets.PRIMARY_LLAMA3_API_KEY }}
+        BACKUP1_LLAMA3_API_KEY: ${{ secrets.BACKUP1_LLAMA3_API_KEY }}
+        PRIMARY_GEMINI_API_KEY: ${{ secrets.PRIMARY_GEMINI_API_KEY }}
+        PRIMARY_INWORLD_API_KEY: ${{ secrets.PRIMARY_INWORLD_API_KEY }}
+        PRIMARY_STABILITY_API_KEY: ${{ secrets.PRIMARY_STABILITY_API_KEY }}
+        PRIMARY_YOUTUBE_DATA_API_KEY: ${{ secrets.PRIMARY_YOUTUBE_DATA_API_KEY }}
